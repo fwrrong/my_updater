@@ -2,14 +2,11 @@ package com.fwrrong.my_updater.model;
 
 import java.util.UUID;
 
-public class Product {
+public class User {
     private UUID id;
-
     private String name;
-
-    private String image;
-
-    private String link;
+    private String password;
+    private String email;
 
     public UUID getId() {
         return id;
@@ -27,19 +24,19 @@ public class Product {
         this.name = name;
     }
 
-    public String getImage() {
-        return image;
+    public String getPassword() {
+        return password;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getLink() {
-        return link;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
