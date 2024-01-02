@@ -1,24 +1,24 @@
 package com.fwrrong.my_updater.service;
 
 import com.fwrrong.my_updater.model.Product;
-import com.fwrrong.my_updater.model.User;
+import com.fwrrong.my_updater.model.AppUser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class UserService {
-    public User getUser(UUID uuid) {
+    public AppUser getUser(UUID uuid) {
 //        TODO: gerUser
-        User user = new User();
+        AppUser user = new AppUser();
         return user;
     }
 
-    public void addUser(User user) {
+    public void addUser(AppUser user) {
 //        TODO
     }
 
-    public User modifyUser(UUID uuid, User user) {
+    public AppUser modifyUser(UUID uuid, AppUser user) {
 //        TODO: gerUser
         return user;
     }
@@ -27,17 +27,4 @@ public class UserService {
 //        TODO
     }
 
-    public List<Product> getFollowedProduct(UUID uuid) {
-//        TODO
-        List<Product> productList = new ArrayList<>();
-        return productList;
-    }
-
-    public void followProduct(UUID userUUID, UUID productUUID) {
-//        TODO
-    }
-
-    public void unfollowProduct(UUID userUUID, UUID productUUID) {
-//        TODO
-    }
 }

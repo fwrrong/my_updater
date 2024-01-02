@@ -1,6 +1,7 @@
 package com.fwrrong.my_updater.controller;
 import com.fwrrong.my_updater.model.Product;
 import com.fwrrong.my_updater.service.ProductService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -55,11 +56,12 @@ public class ProductServiceController {
 //    response: Product
 //    status: 201
         Product savedProduct = productService.postProduct(product);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(savedProduct.getId())
-                .toUri();
-        return ResponseEntity.created(location).body(savedProduct);
+//        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+//                .path("/{id}")
+//                .buildAndExpand(savedProduct.getId())
+//                .toUri();
+//        return ResponseEntity.created(location).body(savedProduct);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
     }
 
     @PutMapping(" /v1/product/{product_uuid}")

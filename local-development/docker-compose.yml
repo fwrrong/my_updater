@@ -18,7 +18,7 @@ services:
       - backend
 
   mongo:
-    container_name: spaceship-mongo
+    container_name: updater-mongo
     image: mongo
     restart: always
     ports:
@@ -26,7 +26,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: spaceship_db
+      MONGO_INITDB_DATABASE: updater_db
 
   # postgres set up
   postgres:
@@ -38,7 +38,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=spaceship_db
+      - POSTGRES_DB=updater_db
       - PGDATA=/var/lib/postgresql/data/db
     networks:
       - backend

@@ -2,7 +2,15 @@ package com.fwrrong.my_updater.model;
 
 import java.util.UUID;
 
-public class User {
+import jakarta.persistence.*;
+//import org.immutables.value.Value;
+
+import static org.yaml.snakeyaml.tokens.Token.ID.Value;
+
+@Entity
+ public class AppUser {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String name;
     private String password;
