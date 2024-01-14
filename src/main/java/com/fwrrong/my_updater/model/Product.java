@@ -2,21 +2,24 @@ package com.fwrrong.my_updater.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.UUID;
 
-@Entity
-@Table(name = "product")
+@Document(collection = "products")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Field("product_uuid")
     private UUID id;
 
     private String name;
 
+    @Field("stock_info")
+    private StockInfo stockInfo;
     private String image;
 
-    private String link;
+    private String url;
 
     public UUID getId() {
         return id;
@@ -34,6 +37,14 @@ public class Product {
         this.name = name;
     }
 
+    public StockInfo getStockInfo() {
+        return stockInfo;
+    }
+
+    public void setStockInfo(StockInfo stockInfo) {
+        this.stockInfo = stockInfo;
+    }
+
     public String getImage() {
         return image;
     }
@@ -42,27 +53,52 @@ public class Product {
         this.image = image;
     }
 
-    public String getLink() {
-        return link;
+    public String getUrl() {
+        return url;
     }
 
-    public void setLink(String link) {
-        this.link = link;
-    }
-
-    public Product(String name, String image, String link) {
-        this.name = name;
-        this.image = image;
-        this.link = link;
-    }
-
-    public Product(UUID id, String name, String image, String link) {
-        this.id = id;
-        this.name = name;
-        this.image = image;
-        this.link = link;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public Product() {
     }
+
+    public Product(String name, String image, String url) {
+        this.name = name;
+        this.image = image;
+        this.url = url;
+    }
+
+    public Product(UUID id, String name, String image, String url) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.url = url;
+    }
+
+    public static class StockInfo {
+        @Field("in_stock")
+        private Boolean inStock = false;
+
+        private Integer quantity = 0;
+
+        public Boolean getInStock() {
+            return inStock;
+        }
+
+        public void setInStock(Boolean inStock) {
+            this.inStock = inStock;
+        }
+
+        public Integer getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(Integer quantity) {
+            this.quantity = quantity;
+        }
+    }
+
+
 }

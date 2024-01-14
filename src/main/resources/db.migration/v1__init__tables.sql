@@ -17,21 +17,21 @@ INSERT INTO app_user (id, email, name, password) VALUES
                                                      ('4d174e35-57f6-402d-b621-1a5a78f4ec9a', 'email5', 'name5', 'password5');
 
 
--- Create the product table
-CREATE TABLE IF NOT EXISTS product (
-                         id UUID PRIMARY KEY,
-                         name VARCHAR(255),
-                         image_url VARCHAR(255),
-                         link_url VARCHAR(255)
-);
-
--- Insert data into the product table
-INSERT INTO product (id, name, image_url, link_url) VALUES
-                                                        ('dddf3243-4272-4b9c-bd87-b1334d1ea1d5', 'Product Name 1', 'Image URL 1', 'Link URL 1'),
-                                                        ('d12cd055-bce2-4243-a599-76e26d5b1d6f', 'Product Name 2', 'Image URL 2', 'Link URL 2'),
-                                                        ('8e124d6c-5331-44cd-a977-109ad0c2a9a8', 'Product Name 3', 'Image URL 3', 'Link URL 3'),
-                                                        ('d12c69db-751f-4265-a531-f178c96749ce', 'Product Name 4', 'Image URL 4', 'Link URL 4'),
-                                                        ('c95e87bc-e6fe-4c7e-b10d-dc7fa99a9200', 'Product Name 5', 'Image URL 5', 'Link URL 5');
+-- -- Create the product table
+-- CREATE TABLE IF NOT EXISTS product (
+--                          id UUID PRIMARY KEY,
+--                          name VARCHAR(255),
+--                          image_url VARCHAR(255),
+--                          link_url VARCHAR(255)
+-- );
+--
+-- -- Insert data into the product table
+-- INSERT INTO product (id, name, image_url, link_url) VALUES
+--                                                         ('dddf3243-4272-4b9c-bd87-b1334d1ea1d5', 'Product Name 1', 'Image URL 1', 'Link URL 1'),
+--                                                         ('d12cd055-bce2-4243-a599-76e26d5b1d6f', 'Product Name 2', 'Image URL 2', 'Link URL 2'),
+--                                                         ('8e124d6c-5331-44cd-a977-109ad0c2a9a8', 'Product Name 3', 'Image URL 3', 'Link URL 3'),
+--                                                         ('d12c69db-751f-4265-a531-f178c96749ce', 'Product Name 4', 'Image URL 4', 'Link URL 4'),
+--                                                         ('c95e87bc-e6fe-4c7e-b10d-dc7fa99a9200', 'Product Name 5', 'Image URL 5', 'Link URL 5');
 
 
 -- Create the follow table

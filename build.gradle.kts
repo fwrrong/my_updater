@@ -22,6 +22,7 @@ dependencies {
     implementation("org.springframework.kafka:spring-kafka")
     implementation("net.jcip:jcip-annotations:1.0")
     implementation("net.jcip:jcip-annotations:1.0")
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 
     runtimeOnly("org.postgresql:postgresql")
 //    implementation("org.postgresql:postgresql:42.6.0")
