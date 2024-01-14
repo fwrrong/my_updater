@@ -1,13 +1,12 @@
 package com.fwrrong.my_updater.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
 
 import java.util.UUID;
 
 @Entity
+@Table(name = "product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -49,5 +48,21 @@ public class Product {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public Product(String name, String image, String link) {
+        this.name = name;
+        this.image = image;
+        this.link = link;
+    }
+
+    public Product(UUID id, String name, String image, String link) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.link = link;
+    }
+
+    public Product() {
     }
 }

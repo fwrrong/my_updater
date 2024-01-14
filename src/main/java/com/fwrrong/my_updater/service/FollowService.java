@@ -1,10 +1,14 @@
 package com.fwrrong.my_updater.service;
 
+import com.fwrrong.my_updater.exception.FollowProductException;
+import com.fwrrong.my_updater.exception.GetFollowedProductException;
+import com.fwrrong.my_updater.exception.UnfollowProductException;
 import com.fwrrong.my_updater.model.Follow;
 import com.fwrrong.my_updater.model.Product;
 import com.fwrrong.my_updater.repository.FollowRepository;
 import com.fwrrong.my_updater.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,33 +17,59 @@ import java.util.UUID;
 
 @Service
 public class FollowService {
-    @Autowired
     private FollowRepository followRepository;
 
-    @Autowired
     private ProductRepository productRepository;
 
-    public List<Product> getFollowedProduct(UUID uuid) {
-//        uuid: uuid of one AppUser
+    public FollowService(FollowRepository followRepository, ProductRepository productRepository) {
+        this.followRepository = followRepository;
+        this.productRepository = productRepository;
+    }
+
+    public List<Product> getFollowedProduct(UUID userUUID) {
+//        uuid: uuid of one User
 //        Return: a list of product that this user following
-//        TODO
-        List<Follow> followList = followRepository.findByUserId(uuid);
+//        TODO: unit test
+        List<Follow> followList;
         List<Product> productList = new ArrayList<>();
+
+        try{
+            followList = followRepository.findByUserId(userUUID);
+        } catch (IllegalArgumentException e){
+            throw new GetFollowedProductException("Invalid user ID", e);
+        }
+
+
         for(Follow follow:followList){
-            productList.add(productRepository.getById(follow.getProductId()));
+            try{
+                productList.add(productRepository.findById(follow.getProductId()).orElseGet(null));
+            } catch (IllegalArgumentException e) {
+                throw new GetFollowedProductException("Invalid product ID", e);
+            }
         }
         return productList;
     }
 
     public void followProduct(UUID userUUID, UUID productUUID) {
-//        TODO: given userId and productId, add a new follow into the table
+//        given userId and productId, add a new follow into the table
+        // TODO: unit test
         Follow follow = new Follow(userUUID, productUUID);
-        followRepository.save(follow);
+        try{
+            followRepository.save(follow);
+        } catch (IllegalArgumentException e) {
+            throw new FollowProductException("Invalid follow", e);
+        } catch(OptimisticLockingFailureException e) {
+            throw new FollowProductException("Internal Error, please try again", e);
+        }
     }
 
-    public void unfollowProduct(UUID uuid) {
-//        TODO: given uuid, delete a new follow into the table
-        followRepository.deleteById(uuid);
-
+    public void unfollowProduct(UUID userUUID, UUID productUUID) {
+//       given uuid, delete a new follow into the table
+        // TODO: unit test
+        try{
+            followRepository.deleteFollowByProductIdAndUserId(userUUID, productUUID);
+        } catch (IllegalArgumentException e) {
+            throw new UnfollowProductException("Invalid unfollow", e);
+        }
     }
 }

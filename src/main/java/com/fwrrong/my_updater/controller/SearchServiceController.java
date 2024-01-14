@@ -13,6 +13,10 @@ import java.util.ArrayList;
 public class SearchServiceController {
     private SearchService searchService;
 
+    public SearchServiceController(SearchService searchService) {
+        this.searchService = searchService;
+    }
+
     @GetMapping("/v1/search/")
     public ResponseEntity<ArrayList<Product>> searchProduct(@RequestParam String query){
 //        GET /v1/search/?query=xxxxxxx

@@ -5,10 +5,10 @@ import java.util.UUID;
 import jakarta.persistence.*;
 //import org.immutables.value.Value;
 
-import static org.yaml.snakeyaml.tokens.Token.ID.Value;
 
 @Entity
- public class AppUser {
+@Table(name = "app_user")
+ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -45,6 +45,22 @@ import static org.yaml.snakeyaml.tokens.Token.ID.Value;
     }
 
     public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public User() {
+    }
+
+    public User(String name, String password, String email) {
+        this.name = name;
+        this.password = password;
+        this.email = email;
+    }
+
+    public User(UUID id, String name, String password, String email) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
         this.email = email;
     }
 }
