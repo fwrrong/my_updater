@@ -18,7 +18,14 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.kafka:spring-kafka")
+    implementation("net.jcip:jcip-annotations:1.0")
+    implementation("net.jcip:jcip-annotations:1.0")
 
+    runtimeOnly("org.postgresql:postgresql")
+//    implementation("org.postgresql:postgresql:42.6.0")
+//
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
