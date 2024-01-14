@@ -5,6 +5,7 @@ import com.fwrrong.my_updater.exception.GetProductException;
 import com.fwrrong.my_updater.exception.ModifyUserException;
 import com.fwrrong.my_updater.model.Product;
 import com.fwrrong.my_updater.service.ProductService;
+import com.fwrrong.my_updater.service.ValidationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +18,11 @@ import java.util.List;
 @RestController
 public class ProductServiceController {
     private ProductService productService;
+    private ValidationService validationService;
 
-    public ProductServiceController(ProductService productService) {
+    public ProductServiceController(ProductService productService, ValidationService validationService) {
         this.productService = productService;
+        this.validationService = validationService;
     }
 
     @GetMapping("/products/")
