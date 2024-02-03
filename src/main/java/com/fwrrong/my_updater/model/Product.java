@@ -10,16 +10,18 @@ import java.util.UUID;
 @Document(collection = "products")
 public class Product {
     @Id
-    @Field("product_uuid")
     private UUID id;
 
     private String name;
 
-    @Field("stock_info")
-    private StockInfo stockInfo;
+    @Field("in_stock")
+    private Boolean inStock = false;
+
     private String image;
 
     private String url;
+
+    private String size;
 
     public UUID getId() {
         return id;
@@ -35,14 +37,6 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public StockInfo getStockInfo() {
-        return stockInfo;
-    }
-
-    public void setStockInfo(StockInfo stockInfo) {
-        this.stockInfo = stockInfo;
     }
 
     public String getImage() {
@@ -61,6 +55,22 @@ public class Product {
         this.url = url;
     }
 
+    public Boolean getInStock() {
+        return inStock;
+    }
+
+    public void setInStock(Boolean inStock) {
+        this.inStock = inStock;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
     public Product() {
     }
 
@@ -76,29 +86,5 @@ public class Product {
         this.image = image;
         this.url = url;
     }
-
-    public static class StockInfo {
-        @Field("in_stock")
-        private Boolean inStock = false;
-
-        private Integer quantity = 0;
-
-        public Boolean getInStock() {
-            return inStock;
-        }
-
-        public void setInStock(Boolean inStock) {
-            this.inStock = inStock;
-        }
-
-        public Integer getQuantity() {
-            return quantity;
-        }
-
-        public void setQuantity(Integer quantity) {
-            this.quantity = quantity;
-        }
-    }
-
 
 }

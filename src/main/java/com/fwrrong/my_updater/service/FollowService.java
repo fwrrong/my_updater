@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -38,11 +39,12 @@ public class FollowService {
         } catch (IllegalArgumentException e){
             throw new GetFollowedProductException("Invalid user ID", e);
         }
-
-
+        List<Product> all = productRepository.findAll();
         for(Follow follow:followList){
             try{
-                productList.add(productRepository.findById(follow.getProductId()).orElseGet(null));
+                UUID productId = follow.getProductId();
+                Optional<Product> product = productRepository.findById(productId);
+                productList.add(product.orElse(null));
             } catch (IllegalArgumentException e) {
                 throw new GetFollowedProductException("Invalid product ID", e);
             }

@@ -36,17 +36,34 @@ INSERT INTO app_user (id, email, name, password) VALUES
 
 -- Create the follow table
 CREATE TABLE IF NOT EXISTS follow (
-                        id UUID PRIMARY KEY,
+                        id UUID NOT NULL DEFAULT uuid_generate_v4(),
                         user_id UUID,
                         product_id UUID,
                         FOREIGN KEY (user_id) REFERENCES app_user(id),
-                        FOREIGN KEY (product_id) REFERENCES product(id)
+                        PRIMARY KEY (id)
 );
 
 -- Insert data into the follow table
-INSERT INTO follow (id, user_id, product_id) VALUES
-                                                 ('37ba0511-7803-4e66-a54c-a353f1f92a77', '4d174e35-57f6-402d-b621-1a5a78f4ec9a', 'c95e87bc-e6fe-4c7e-b10d-dc7fa99a9200'),
-                                                 ('72e6f680-62a3-4151-b227-afe27046db79', '1a03359d-f78a-4970-859e-1ba14c211908', 'd12cd055-bce2-4243-a599-76e26d5b1d6f'),
-                                                 ('7de650a1-10d1-4850-8ab2-b2e96ccdccdf', 'd7fb7a46-7276-4f8b-b4a4-f1001a1963ed', 'd12cd055-bce2-4243-a599-76e26d5b1d6f'),
-                                                 ('813e90f9-33f3-4464-a6df-0d877cecaf79', '14f741f2-7424-477e-89ab-3fafa754332e', 'd12c69db-751f-4265-a531-f178c96749ce'),
-                                                 ('930dd3cd-4dd3-4b10-8112-3a84289a775e', 'd7fb7a46-7276-4f8b-b4a4-f1001a1963ed', 'd12cd055-bce2-4243-a599-76e26d5b1d6f');
+INSERT INTO follow (user_id, product_id) VALUES
+                                                 ('4d174e35-57f6-402d-b621-1a5a78f4ec9a', 'ffbfc587-a458-4940-9bef-049fe2857dc0'),
+                                                 ('1a03359d-f78a-4970-859e-1ba14c211908', 'ffbfc587-a458-4940-9bef-049fe2857dc0'),
+                                                 ('d7fb7a46-7276-4f8b-b4a4-f1001a1963ed', 'ffbfc587-a458-4940-9bef-049fe2857dc0'),
+                                                 ('14f741f2-7424-477e-89ab-3fafa754332e', 'ffbfc587-a458-4940-9bef-049fe2857dc0'),
+                                                 ('d7fb7a46-7276-4f8b-b4a4-f1001a1963ed', 'ffbfc587-a458-4940-9bef-049fe2857dc0');
+
+CREATE TABLE  IF NOT EXISTS product_urls (
+    brand varchar(255),
+    url varchar(255),
+    PRIMARY KEY (url)
+);
+
+INSERT INTO product_urls (brand, url) VALUES
+                                          ('nike', 'https://www.nike.com/t/air-force-1-07-mens-shoes-jBrhbr/CW2288-001'),
+                                          ('nike', 'https://www.nike.com/t/air-force-1-07-mens-shoes-jBrhbr/CW2288-111'),
+                                          ('nike', 'https://www.nike.com/t/air-force-1-07-mens-shoes-jBrhbr/CT2302-002'),
+                                          ('nike', 'https://www.nike.com/t/air-force-1-07-mens-shoes-jBrhbr/CT2302-100'),
+                                          ('nike', 'https://www.nike.com/t/air-jordan-1-mid-womens-shoes-Kg3nnj/DV0991-111'),
+                                          ('nike', 'https://www.nike.com/t/air-jordan-1-mid-womens-shoes-Kg3nnj/DV0991-001');
+
+
+CREATE INDEX brand_url_index ON product_urls(brand);

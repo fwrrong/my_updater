@@ -14,7 +14,6 @@ import java.util.UUID;
 @RequestMapping("/v1/follow")
 public class FollowServiceController {
     private FollowService followService;
-
     public FollowServiceController(FollowService followService) {
         this.followService = followService;
     }
@@ -81,7 +80,7 @@ public class FollowServiceController {
     }
 
     @DeleteMapping("/{user_uuid}/{product_uuid}")
-    public ResponseEntity<?> unFollowProduct(@PathVariable("user_uuid") String userUuid, @PathVariable("product_uuid") String productUuid) {
+    public ResponseEntity<?> unFollowProduct(@PathVariable("user_uuid") String userId, @PathVariable("product_uuid") String productId) {
 //        Unfollow a Product
 //        Endpoint: /v1/follow/{user_uuid}/unfollow-product/{product_uuid}
 //        Method: DELETE
@@ -93,13 +92,13 @@ public class FollowServiceController {
         UUID productUUID;
 
         try {
-            userUUID = UUID.fromString(userUuid);
+            userUUID = UUID.fromString(userId);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid user UUID");
         }
 
         try {
-            productUUID = UUID.fromString(productUuid);
+            productUUID = UUID.fromString(productId);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid product UUID");
         }

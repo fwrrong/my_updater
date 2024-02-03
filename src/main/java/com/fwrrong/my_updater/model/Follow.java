@@ -8,9 +8,13 @@ import java.util.UUID;
 @Table(name = "follow")
 public class Follow {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(name = "user_id")
     private UUID userId;
+
+    @Column(name = "product_id")
     private UUID productId;
 
     public UUID getId() {
@@ -45,9 +49,4 @@ public class Follow {
         this.productId = productId;
     }
 
-    public Follow(UUID id, UUID userId, UUID productId) {
-        this.id = id;
-        this.userId = userId;
-        this.productId = productId;
-    }
 }

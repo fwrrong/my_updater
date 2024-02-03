@@ -13,10 +13,10 @@ public class ValidationService {
 
     private static final List<String> URL_WHITELIST = Arrays.asList("https://apple.com");
     public boolean validateProduct(Product product) {
-        String url = product.getLink();
-        if (!URL_WHITELIST.contains(url)) {
-            return false;
-        }
+//        String url = product.getLink();
+//        if (!URL_WHITELIST.contains(url)) {
+//            return false;
+//        }
         return true;
     }
 }
