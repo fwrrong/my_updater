@@ -26,25 +26,25 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product addProduct(String name, String image, String link) {
-//        TODO: unit test
-        Product product = new Product(name, image, link);
-
-        try {
-            productRepository.save(product);
-        } catch (IllegalArgumentException e) {
-            throw new AddProductException("Invalid product", e);
-        } catch (OptimisticLockingFailureException e) {
-            throw new AddProductException("Internal Error, please try again", e);
-        }
-
-        return product;
-    }
+//    public Product addProduct(String name, String image, String url, String size) {
+////        TODO: unit test
+//        Product product = new Product(name, image, url, size);
+//
+//        try {
+//            productRepository.save(product);
+//        } catch (IllegalArgumentException e) {
+//            throw new AddProductException("Invalid product", e);
+//        } catch (OptimisticLockingFailureException e) {
+//            throw new AddProductException("Internal Error, please try again", e);
+//        }
+//
+//        return product;
+//    }
 
     public Product getProduct(UUID uuid) {
 //        TODO: unit test
         Optional<Product> product;
-
+        System.out.println(productRepository.findAll());
         try{
             product = productRepository.findById(uuid);
         } catch (IllegalArgumentException e) {
@@ -53,10 +53,13 @@ public class ProductService {
 
         return product.orElse(null);
     }
+    public Product getProductByName(String name) {
+        return productRepository.findByName(name).orElse(null);
+    }
 
-    public Product modifyProduct(UUID uuid, String name, String image, String link) {
+    public Product modifyProduct(UUID id, String name, Boolean inStock, String image, String url, String size) {
 //        TODO: unit test
-        Product product = new Product(uuid, name, image, link);
+        Product product = new Product(id, name, inStock, image, url, size);
         Product updatedProduct;
 
         try {

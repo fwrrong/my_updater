@@ -6,6 +6,7 @@ import com.fwrrong.my_updater.exception.ModifyUserException;
 import com.fwrrong.my_updater.model.Product;
 import com.fwrrong.my_updater.service.ProductService;
 import com.fwrrong.my_updater.service.ValidationService;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +26,13 @@ public class ProductServiceController {
         this.validationService = validationService;
     }
 
-    @GetMapping("/products/")
-    public ResponseEntity<List<Product>> getProducts(){
-//        add validation and error handling here
-        // TODO: add cache, use @Cacheable
-        List<Product> productList = productService.getFeaturedProduct();
-        return ResponseEntity.ok(productList);
-    }
+//    @GetMapping("/products/")
+//    public ResponseEntity<List<Product>> getProducts(){
+////        add validation and error handling here
+//        // TODO: add cache, use @Cacheable
+//        List<Product> productList = productService.getFeaturedProduct();
+//        return ResponseEntity.ok(productList);
+//    }
 //
 //    @GetMapping("/product/{productName}/")
 //    public ResponseEntity<List<Product>> searchProducts(String productName){
@@ -68,37 +69,38 @@ public class ProductServiceController {
         return ResponseEntity.ok(product);
     }
 
-    @PostMapping("/v1/product")
-    public ResponseEntity<?> addProduct(@RequestBody Map<String, String> requestBody) {
-//    Add one product to MongoDB
-//    POST /v1/product
-//    payload:
-//        {
-//            "name": "Product Name 6",
-//            "image": "Image URL 6",
-//            "link": "Link URL 6"
+//    @GetMapping("/v1/product/name/{product_name}")
+//    public ResponseEntity<Product> getProductByName(@PathVariable("product_name") String productName) {
+//        var p = productService.getProductByName(productName);
+//        return ResponseEntity.ok(p);
+//    }
+
+//    @PostMapping("/v1/product")
+//    public ResponseEntity<?> addProduct(@RequestBody Map<String, String> requestBody) {
+////    Add one product to MongoDB
+////    POST /v1/product
+////    payload:
+////        {
+////            "name": "Product Name 6",
+////            "image": "Image URL 6",
+////            "link": "Link URL 6"
+////        }
+//////    response: Product
+////    status: 201
+//        // TODO validation if a valid product
+//        String name = requestBody.get("name");
+//        String image = requestBody.get("image");
+//        String url = requestBody.get("url");
+//        String size = requestBody.get("size");
+//
+//        Product savedProduct;
+//        try {
+//            savedProduct = productService.addProduct(name, image, url, size);
+//        } catch (AddProductException e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
 //        }
-////    response: Product
-//    status: 201
-        // TODO validation if a valid product
-        String name = requestBody.get("name");
-        String image = requestBody.get("image");
-        String link = requestBody.get("link");
-
-        Product savedProduct;
-        try {
-            savedProduct = productService.addProduct(name, image, link);
-        } catch (AddProductException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-
-//        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-//                .path("/{id}")
-//                .buildAndExpand(savedProduct.getId())
-//                .toUri();
-//        return ResponseEntity.created(location).body(savedProduct);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
-    }
+//        return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+//    }
 
     @PutMapping("/v1/product/{product_uuid}")
     public ResponseEntity<?> modifyProduct(@RequestBody Map<String, String> requestBody, @PathVariable("product_uuid") String productUuid) {
@@ -108,14 +110,16 @@ public class ProductServiceController {
 //        {
 //            "name": "Product Name 6",
 //            "image": "Image URL 6",
-//            "link": "Link URL 6"
+//            "url": "Link URL 6"
 //        }
 //        response: Product
 //        status: 200
         UUID uuid;
         String name = requestBody.get("name");
         String image = requestBody.get("image");
-        String link = requestBody.get("link");
+        String url = requestBody.get("url");
+        String size = requestBody.get("size");
+        Boolean inStock = Boolean.parseBoolean(requestBody.get("in_stock"));
         Product updatedProduct;
 
         try {
@@ -125,7 +129,7 @@ public class ProductServiceController {
         }
 
         try {
-            updatedProduct = productService.modifyProduct(uuid, name, image, link);
+            updatedProduct = productService.modifyProduct(uuid, name, inStock, image, url, size);
         } catch (ModifyUserException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

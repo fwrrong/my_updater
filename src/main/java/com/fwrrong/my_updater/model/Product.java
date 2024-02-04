@@ -1,10 +1,8 @@
 package com.fwrrong.my_updater.model;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.Type;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
 import java.util.UUID;
 
 @Document(collection = "products")
@@ -74,17 +72,31 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String image, String url) {
+    public Product(String name, String image, String url, String size) {
         this.name = name;
         this.image = image;
         this.url = url;
+        this.size = size;
     }
 
-    public Product(UUID id, String name, String image, String url) {
+    public Product(UUID id, String name, Boolean inStock, String image, String url, String size) {
         this.id = id;
         this.name = name;
+        this.inStock = inStock;
         this.image = image;
         this.url = url;
+        this.size = size;
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", inStock=" + inStock +
+                ", image='" + image + '\'' +
+                ", url='" + url + '\'' +
+                ", size='" + size + '\'' +
+                '}';
+    }
 }

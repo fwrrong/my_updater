@@ -10,7 +10,13 @@ import java.util.UUID;
 public interface ProductRepository
         extends MongoRepository<Product, UUID> {
 
-    @Query("{ '_id' : ?0 }")
-    Optional<Product> findById(UUID id);
+//    @Query("{ '_id' : ?0 }")
+//    Optional<Product> findByUuid(UUID id);
+//
+//    @Query("{ '_id' : ?0 }")
+//    Optional<Product> findByStrId(String id);
+//    Optional<Product> findById(UUID uuid);
+    Optional<Product> findByName(String name);
+
 
 }

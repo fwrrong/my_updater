@@ -1,4 +1,5 @@
 package com.fwrrong.my_updater.configuration;
+import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
@@ -23,10 +24,13 @@ public class MongoConfig {
     public static class UUIDToBinaryConverter implements Converter<UUID, Binary> {
         @Override
         public Binary convert(UUID source) {
+            System.out.println(("writer " +  source));
             ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
             bb.putLong(source.getMostSignificantBits());
             bb.putLong(source.getLeastSignificantBits());
-            return new Binary(bb.array());
+            Binary binary = new Binary(BsonBinarySubType.UUID_STANDARD, bb.array());
+            System.out.println(String.format("writer converted to binary %s", binary));
+            return binary;
         }
     }
 
@@ -34,10 +38,13 @@ public class MongoConfig {
     public static class BinaryToUUIDConverter implements Converter<Binary, UUID> {
         @Override
         public UUID convert(Binary source) {
+            System.out.println(source);
             ByteBuffer bb = ByteBuffer.wrap(source.getData());
             long firstLong = bb.getLong();
             long secondLong = bb.getLong();
-            return new UUID(firstLong, secondLong);
+            UUID uuid = new UUID(firstLong, secondLong);
+            System.out.println(uuid);
+            return uuid;
         }
     }
 }
