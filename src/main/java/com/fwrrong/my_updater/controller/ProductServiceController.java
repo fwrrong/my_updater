@@ -49,7 +49,7 @@ public class ProductServiceController {
 //    }
 
     @GetMapping("/v1/product/{product_uuid}")
-    public ResponseEntity<?> getProduct(@PathVariable("product_uuid") String productUuid){
+    public ResponseEntity<?> getProduct(@PathVariable("product_uuid") String productId){
 //        Get one product from product_uuid
 //        GET /v1/product/{product_uuid}
 //        response: Product object (name, UUID, image, link)
@@ -57,10 +57,15 @@ public class ProductServiceController {
         UUID uuid;
         Product product;
         try {
-            uuid = UUID.fromString(productUuid);
+            uuid = UUID.fromString(productId);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid UUID");
         }
+
+        if (!validationService.validateProductId(uuid)) {
+            return ResponseEntity.badRequest().body("product id not found");
+        }
+
         try {
             product = productService.getProduct(uuid);
         } catch (GetProductException e) {
@@ -114,6 +119,7 @@ public class ProductServiceController {
 //        }
 //        response: Product
 //        status: 200
+//        TODO: validation
         UUID uuid;
         String name = requestBody.get("name");
         String image = requestBody.get("image");
@@ -128,6 +134,30 @@ public class ProductServiceController {
             return ResponseEntity.badRequest().body("Invalid product UUID");
         }
 
+        if (!validationService.validateProductId(uuid)) {
+            return ResponseEntity.badRequest().body("product id not found");
+        }
+
+        if (!validationService.validateProductName(name)) {
+            return ResponseEntity.badRequest().body("Invalid product name");
+        }
+
+        if (!validationService.validateProductImage(image)) {
+            return ResponseEntity.badRequest().body("Invalid product image");
+        }
+
+        if(!validationService.validateProductUrl(url)){
+            return ResponseEntity.badRequest().body("Invalid product url");
+        }
+
+        if (!validationService.validateProductInStock(inStock)) {
+            return ResponseEntity.badRequest().body("Invalid product in_stock");
+        }
+
+        if (!validationService.validateProductSize(size)) {
+            return ResponseEntity.badRequest().body("Invalid product size");
+        }
+
         try {
             updatedProduct = productService.modifyProduct(uuid, name, inStock, image, url, size);
         } catch (ModifyUserException e) {
@@ -138,7 +168,7 @@ public class ProductServiceController {
     }
 
     @DeleteMapping("/v1/product/{product_uuid}")
-    public ResponseEntity<?> deleteProduct(@PathVariable("product_uuid") String productUuid){
+    public ResponseEntity<?> deleteProduct(@PathVariable("product_uuid") String productId){
 //    Delete one product
 //    DELETE /v1/product/{product_uuid}
 //    response: success/failure
@@ -146,9 +176,13 @@ public class ProductServiceController {
         UUID uuid;
 
         try {
-            uuid = UUID.fromString(productUuid);
+            uuid = UUID.fromString(productId);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid UUID");
+        }
+
+        if (!validationService.validateProductId(uuid)) {
+            return ResponseEntity.badRequest().body("Product id not found");
         }
 
         try {
@@ -159,8 +193,4 @@ public class ProductServiceController {
 
         return ResponseEntity.ok("Product deleted successfully");
     }
-
-
-
-
 }

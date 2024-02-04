@@ -18,5 +18,4 @@ public interface ProductRepository
 //    Optional<Product> findById(UUID uuid);
     Optional<Product> findByName(String name);
 
-
 }

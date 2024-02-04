@@ -3,6 +3,7 @@ package com.fwrrong.my_updater.controller;
 import com.fwrrong.my_updater.exception.FollowProductException;
 import com.fwrrong.my_updater.model.Product;
 import com.fwrrong.my_updater.service.FollowService;
+import com.fwrrong.my_updater.service.ValidationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,28 +15,33 @@ import java.util.UUID;
 @RequestMapping("/v1/follow")
 public class FollowServiceController {
     private FollowService followService;
+    private ValidationService validationService;
     public FollowServiceController(FollowService followService) {
         this.followService = followService;
     }
 
     @GetMapping("/{user_uuid}")
-    public ResponseEntity<?> getFollowedProduct(@PathVariable("user_uuid") String userUuid){
+    public ResponseEntity<?> getFollowedProduct(@PathVariable("user_uuid") String userId){
 //        Get User's Followed Products
 //        GET /v1/follow/{user_uuid}/followed-products
 //        Response: List of Product objects
 //        Status: 200 OK
 //        Use Case: Allows a user to see all the products they are following.
-        UUID uuid ;
+        UUID userUuid ;
         List<Product> productList;
 
         try {
-            uuid = UUID.fromString(userUuid);
+            userUuid = UUID.fromString(userId);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid UUID");
         }
 
+        if (!validationService.validateUserId(userUuid)) {
+            return ResponseEntity.badRequest().body("user id not found");
+        }
+
         try{
-            productList = followService.getFollowedProduct(uuid);
+            productList = followService.getFollowedProduct(userUuid);
         } catch (FollowProductException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -55,23 +61,31 @@ public class FollowServiceController {
 //    Response: Success confirmation or error message
 //    Status: 200 OK (on success), 404 Not Found (user/product not found), etc.
 //    Use Case: Allows a user to follow a product to receive updates or notification.
-        UUID userUUID;
-        UUID productUUID;
+        UUID userUuid;
+        UUID productUuid;
 
         try {
-            userUUID = UUID.fromString(requestBody.get("user_uuid"));
+            userUuid = UUID.fromString(requestBody.get("user_uuid"));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid user UUID");
         }
 
         try {
-            productUUID = UUID.fromString(requestBody.get("product_uuid"));
+            productUuid = UUID.fromString(requestBody.get("product_uuid"));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid product UUID");
         }
 
+        if (!validationService.validateUserId(userUuid)) {
+            return ResponseEntity.badRequest().body("User id not found");
+        }
+
+        if (!validationService.validateProductId(productUuid)) {
+            return ResponseEntity.badRequest().body("Product id not found");
+        }
+
         try{
-            followService.followProduct(userUUID, productUUID);
+            followService.followProduct(userUuid, productUuid);
         } catch (FollowProductException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -88,23 +102,31 @@ public class FollowServiceController {
 //        Response: Success confirmation or error message
 //        Status: 200 OK (on success), 404 Not Found (user/product not found), etc.
 //        Use Case: Allows a user to unfollow a product to stop receiving updates or notifications.
-        UUID userUUID;
-        UUID productUUID;
+        UUID userUuid;
+        UUID productUuid;
 
         try {
-            userUUID = UUID.fromString(userId);
+            userUuid = UUID.fromString(userId);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid user UUID");
         }
 
         try {
-            productUUID = UUID.fromString(productId);
+            productUuid = UUID.fromString(productId);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid product UUID");
         }
 
+        if (!validationService.validateUserId(userUuid)) {
+            return ResponseEntity.badRequest().body("User id not found");
+        }
+
+        if (!validationService.validateProductId(productUuid)) {
+            return ResponseEntity.badRequest().body("Product id not found");
+        }
+
         try{
-            followService.unfollowProduct(userUUID, productUUID);
+            followService.unfollowProduct(userUuid, productUuid);
         } catch (FollowProductException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

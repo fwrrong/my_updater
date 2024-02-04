@@ -1,9 +1,7 @@
 package com.fwrrong.my_updater.model;
 
-import java.util.UUID;
-
 import jakarta.persistence.*;
-//import org.immutables.value.Value;
+import java.util.UUID;
 
 
 @Entity

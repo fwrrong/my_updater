@@ -6,6 +6,7 @@ import com.fwrrong.my_updater.exception.GetUserException;
 import com.fwrrong.my_updater.exception.ModifyUserException;
 import com.fwrrong.my_updater.model.User;
 import com.fwrrong.my_updater.service.UserService;
+import com.fwrrong.my_updater.service.ValidationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +17,14 @@ import java.util.UUID;
 public class UserServiceController {
 
     private UserService userService;
+    private ValidationService validationService;
 
     public UserServiceController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping("/v1/user/{user_uuid}")
-    public ResponseEntity<?> getUser(@PathVariable("user_uuid") String userUuid){
+    public ResponseEntity<?> getUser(@PathVariable("user_uuid") String userId){
 //        Get one user from user_uuid
 //        GET /v1/user/{user_uuid}
 //        response: User object (email, UUID, password)
@@ -31,9 +33,13 @@ public class UserServiceController {
         User user;
 
         try {
-            uuid = UUID.fromString(userUuid);
+            uuid = UUID.fromString(userId);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid UUID");
+        }
+
+        if (!validationService.validateUserId(uuid)) {
+            return ResponseEntity.badRequest().body("user id not found");
         }
 
         try {
@@ -65,6 +71,18 @@ public class UserServiceController {
         String email = requestBody.get("email");
         User user;
 
+        if (!validationService.validateUserName(name)) {
+            return ResponseEntity.badRequest().body("Invalid User Name");
+        }
+
+        if (!validationService.validateUserPassword(password)) {
+            return ResponseEntity.badRequest().body("Invalid User Password");
+        }
+
+        if (!validationService.validateUserEmail(email)) {
+            return ResponseEntity.badRequest().body("Invalid User Email");
+        }
+
         try {
             user = userService.addUser(name, password, email);
         } catch (AddUserException e) {
@@ -92,6 +110,22 @@ public class UserServiceController {
             return ResponseEntity.badRequest().body("Invalid UUID");
         }
 
+        if (!validationService.validateUserId(uuid)) {
+            return ResponseEntity.badRequest().body("user id not found");
+        }
+
+        if (!validationService.validateUserName(name)) {
+            return ResponseEntity.badRequest().body("Invalid User Name");
+        }
+
+        if (!validationService.validateUserPassword(password)) {
+            return ResponseEntity.badRequest().body("Invalid User Password");
+        }
+
+        if (!validationService.validateUserEmail(email)) {
+            return ResponseEntity.badRequest().body("Invalid User Email");
+        }
+
         try {
             modifiedUser = userService.modifyUser(uuid, name, password, email);
         } catch (ModifyUserException e) {
@@ -113,6 +147,10 @@ public class UserServiceController {
             uuid = UUID.fromString(userUuid);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid UUID");
+        }
+
+        if (!validationService.validateUserId(uuid)) {
+            return ResponseEntity.badRequest().body("user id not found");
         }
 
         try {
