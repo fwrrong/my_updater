@@ -1,10 +1,9 @@
 import uuid
-from bson.binary import Binary, UuidRepresentation
 
 
 class Product:
-    def __init__(self, name, size, image, url, in_stock, id=None):
-        self.__id: uuid = uuid.uuid4() if id is None else id
+    def __init__(self, name, size, image, url, in_stock, product_id=None):
+        self.__id: uuid = uuid.uuid4() if product_id is None else product_id
         # self.__id: str = Binary(uuid.uuid4().bytes, subtype=UuidRepresentation.STANDARD) if id is None else id
         self.__name: str = name
         self.__size: str = size

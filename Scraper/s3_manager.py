@@ -17,5 +17,5 @@ class S3Manager:
         return file_name
 
     def download_file(self, file_name, key):
-        self.client.download_file(file_name, key, self.bucket_name);
+        self.client.download_file(file_name, key, self.bucket_name)
         return file_name

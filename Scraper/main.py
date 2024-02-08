@@ -1,10 +1,8 @@
-from product_manager import ProductManager
-from s3_manager import S3Manager
-from scraper_nike import NikeScraper
-from url_fetcher import URLFetcher
+import asyncio
+from temporal_manager import TemporalManager
 
 
-def main():
+async def main():
     conn_params = {
         "dbname": "updater",
         "user": "postgres",
@@ -13,12 +11,33 @@ def main():
         "port": "5432",
     }
     connection_str = "mongodb://root:password@localhost:27017/admin"
-    product_manager = ProductManager(connection_str)
-    url_fetcher = URLFetcher(conn_params)
-    s3_manager = S3Manager('image')
-    nike_scraper = NikeScraper(product_manager, url_fetcher, s3_manager)
-    nike_scraper.parse_html()
+    bucket_name = "images"
+    manager = TemporalManager(
+        address="localhost:7233",
+        connection_str=connection_str,
+        bucket_name=bucket_name,
+        conn_params=conn_params,
+    )
+
+    await manager.connect()
+
+    await manager.execute_workflow()
+
+    # product_manager = ProductManager(connection_str)
+    # url_fetcher = URLFetcher(conn_params)
+    # s3_manager = S3Manager('image')
+    # urls = url_fetcher.get_all_brand_urls()
+    # for brand, urls in urls.items():
+    #     if brand == 'nike':
+    #         scraper = NikeScraper(product_manager, s3_manager, urls)
+    #         target_selector = "#buyTools > div:nth-child(1) > fieldset > div"
+    #     elif brand == 'lv':
+    #         pass
+    #     htmls = scraper.fetch_html()
+    #     product_list = scraper.parse_htmls(htmls)
+    #     scraper.save_to_db(product_list)
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
+    # main()

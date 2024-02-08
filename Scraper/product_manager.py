@@ -30,7 +30,7 @@ class ProductManager:
                            image=document.get("image"),
                            url=document.get("url"),
                            in_stock=document.get("in_stock"),
-                           id=document.get("id")
+                           product_id=document.get("id")
                            )
         else:
             return None

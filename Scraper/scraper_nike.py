@@ -1,43 +1,30 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import requests
 from bs4 import BeautifulSoup
-import pymongo
-from pymongo import MongoClient, UpdateOne
-import uuid
-import os
-import psycopg2
-from abc import ABC, abstractmethod
 from overrides import overrides
 from product import Product
 from product_manager import ProductManager
 from s3_manager import S3Manager
 from scraper import Scraper
-from url_fetcher import URLFetcher
 
 
 class NikeScraper(Scraper):
-    def __init__(self, product_manager: ProductManager, url_fetcher: URLFetcher, s3_manager: S3Manager):
-        super().__init__(product_manager, url_fetcher, s3_manager)
+    def __init__(self, product_manager: ProductManager, s3_manager: S3Manager, urls: list, css_selector: str):
+        super().__init__(product_manager, s3_manager, urls, css_selector)
 
     @overrides
-    def parse_html(self):
-        target_selector = "#buyTools > div:nth-child(1) > fieldset > div"
-        urls = self.url_fetcher.get_url("nike")
-        for url in urls:
-            html = self.fetch_html_with_chrome(url=url, css_selector=target_selector)
+    def parse_htmls(self, htmls):
+        product_list = []
+        for url, html in htmls:
             soup = BeautifulSoup(html, "html.parser")
             if self.product_manager.is_find_product(url):  # the product is already in mongodb
                 print("the product is already in mongodb")
-                self.parse_old_html(url, soup)
+                product_list.extend(self.parse_old_html(url, soup))
             else:
                 print("the product is not in mongodb")
-                product_list = self.parse_new_html(url, html, soup)
-                self.product_manager.insert_products(product_list)
+                product_list.extend(self.parse_new_html(url, soup))
+        return product_list
+        # self.product_manager.insert_products(product_list)
 
-    def parse_old_html(self, url: str, soup):
+    def parse_old_html(self, url: str, soup) -> list[tuple]:
         size_tags = soup.find("fieldset", {"class": "mt5-sm mb3-sm body-2 css-1pj6y87"})
 
         product_data_list = []
@@ -52,13 +39,15 @@ class NikeScraper(Scraper):
                     "url": url,
                 }
                 new_values = {"$set": {"in_stock": not input_tag.has_attr("disabled")}}
-                self.product_manager.update_product(query=query, new_values=new_values)
+                product_data_list.append((query, new_values))
+                # self.product_manager.update_product(query=query, new_values=new_values)
+        return product_data_list
 
-    def parse_new_html(self, url: str, html: str, soup):
+    def parse_new_html(self, url: str, soup) -> list[Product]:
         product_name = soup.title.text if soup.title else "Unknown Product"
 
         product_code = url.split("/")[-1]
-        image_directory = "images/nike"
+        image_directory = "nike"
         # img_path = f"{image_directory}/{product_code}.png"
         image_tag = soup.find("img", {"aria-hidden": "false"})
         img_path = self.download_img(image_tag, image_directory, product_code)
@@ -78,5 +67,3 @@ class NikeScraper(Scraper):
                 product_data_list.append(product)
 
         return product_data_list
-
-
